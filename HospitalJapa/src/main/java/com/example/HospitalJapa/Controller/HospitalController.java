@@ -1,8 +1,8 @@
 package com.example.HospitalJapa.Controller;
 
 import com.example.HospitalJapa.DTO.HospitalDTO;
-import com.example.HospitalJapa.Model.*;
-import com.example.HospitalJapa.Service.*;
+import com.example.HospitalJapa.Model.Hospital;
+import com.example.HospitalJapa.Service.HospitalService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,7 +17,6 @@ import java.util.List;
 public class HospitalController {
 
     @Autowired private HospitalService hospitalService;
-    @Autowired private RoomService roomService;
 
     @GetMapping
     public ResponseEntity<List<Hospital>> listarTodos() {
@@ -45,28 +44,5 @@ public class HospitalController {
     public ResponseEntity<Void> deletar(@PathVariable Long id) {
         hospitalService.deleteHospital(id);
         return ResponseEntity.noContent().build();
-    }
-
-
-
-    @GetMapping("/wards/{wardId}/rooms")
-    public ResponseEntity<List<Room>> listarQuartosDAla(@PathVariable Long wardId) {
-        return ResponseEntity.ok(roomService.getRoomsByWardId(wardId));
-    }
-
-    @GetMapping("/rooms/{roomId}")
-    public ResponseEntity<Room> buscarQuarto(@PathVariable Long roomId) {
-        return ResponseEntity.ok(roomService.getRoomById(roomId));
-    }
-
-    @PostMapping("/wards/{wardId}/rooms")
-    public ResponseEntity<Room> criarQuarto(
-            @PathVariable Long wardId,
-            @RequestParam(required = false) Integer qtdLeitos, // Opcional
-            @Valid @RequestBody Room room) {
-
-
-        Room roomCriado = roomService.createRoom(wardId, room, qtdLeitos);
-        return ResponseEntity.status(HttpStatus.CREATED).body(roomCriado);
     }
 }
