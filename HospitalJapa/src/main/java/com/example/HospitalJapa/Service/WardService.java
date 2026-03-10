@@ -48,7 +48,7 @@ public class WardService {
             Integer qtdLeitos = wardDto.quantidadeLeitosPorQuarto();
 
             if (qtdQuartos != null && qtdQuartos > 0) {
-                roomService.createRooms(ward, wardDto.specialty().toString(), qtdQuartos, qtdLeitos);
+                roomService.createRoomsBulk(ward, wardDto.specialty().toString(), qtdQuartos, qtdLeitos);
             }
 
             hospital.getWards().add(ward);

@@ -47,9 +47,10 @@ public class HospitalController {
         return ResponseEntity.noContent().build();
     }
 
+
+
     @GetMapping("/wards/{wardId}/rooms")
     public ResponseEntity<List<Room>> listarQuartosDAla(@PathVariable Long wardId) {
-        // CORREÇÃO: O nome do método no Service é getRoomsByWardId
         return ResponseEntity.ok(roomService.getRoomsByWardId(wardId));
     }
 
@@ -61,9 +62,11 @@ public class HospitalController {
     @PostMapping("/wards/{wardId}/rooms")
     public ResponseEntity<Room> criarQuarto(
             @PathVariable Long wardId,
+            @RequestParam(required = false) Integer qtdLeitos, // Opcional
             @Valid @RequestBody Room room) {
-        // Mantive a chamada ao HospitalService pois você definiu a lógica lá
-        Room roomCriado = hospitalService.createRoom(wardId, room);
+
+
+        Room roomCriado = roomService.createRoom(wardId, room, qtdLeitos);
         return ResponseEntity.status(HttpStatus.CREATED).body(roomCriado);
     }
 }
