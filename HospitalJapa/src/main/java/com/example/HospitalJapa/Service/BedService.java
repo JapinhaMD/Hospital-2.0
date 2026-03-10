@@ -27,20 +27,14 @@ public class BedService {
         return convertToDTO(bed);
     }
 
-    public List<Bed> getBedsByRoomId(Long roomId) {
-        return bedRepository.findByRoomId(roomId);
-    }
-
     public List<BedDTO> getBedDTOsByRoomId(Long roomId) {
         return bedRepository.findByRoomId(roomId).stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
 
-
-
-    public void createBeds(Room room, int quantidadeLeitos) {
-        for (int j = 1; j <= quantidadeLeitos; j++) {
+    public void createBeds(Room room, Integer quantidadeLeitos) {
+        for (Integer j = 1; j <= quantidadeLeitos; j++) {
             Bed bed = new Bed();
             bed.setBedNumber(String.valueOf(j));
             bed.setStatus("UNOCCUPIED");
@@ -51,6 +45,7 @@ public class BedService {
         }
     }
 
+
     @Transactional
     public void deleteBed(Long id) {
         bedRepository.deleteById(id);
@@ -59,7 +54,7 @@ public class BedService {
     private BedDTO convertToDTO(Bed bed) {
         BedDTO dto = new BedDTO();
         dto.setId(bed.getId());
-        dto.setBedNumber(bed.getBedNumber());
+        dto.setBedNumber(String.valueOf(bed.getBedNumber()));
         dto.setStatus(bed.getStatus());
         dto.setRoomId(bed.getRoom().getId());
         dto.setPatientId(bed.getPatient() != null ? bed.getPatient().getId() : null);

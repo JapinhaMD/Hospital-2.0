@@ -2,6 +2,7 @@ package com.example.HospitalJapa.Model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import java.util.List;
 
@@ -26,6 +27,9 @@ public class Patient {
 
     @NotBlank(message = "O telefone é obrigatório")
     private String phone;
+
+    @NotNull
+    private Boolean isHospitalized = false;
 
     @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Bed> beds;

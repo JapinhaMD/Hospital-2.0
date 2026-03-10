@@ -19,6 +19,11 @@ public class PatientController {
     @Autowired
     private PatientService patientService;
 
+    @PostMapping
+    public ResponseEntity<Patient> criar(@Valid @RequestBody PatientDTO dto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(patientService.createPatient(dto));
+    }
+
     @GetMapping
     public ResponseEntity<List<PatientDTO>> listarTodos() {
         return ResponseEntity.ok(patientService.getAllPatients());
@@ -29,21 +34,9 @@ public class PatientController {
         return ResponseEntity.ok(patientService.getPatientDTOById(id));
     }
 
-    @GetMapping("/cpf/{cpf}")
-    public ResponseEntity<Patient> buscarPorCpf(@PathVariable String cpf) {
-        return ResponseEntity.ok(patientService.getPatientByCpf(cpf));
-    }
-
-    @PostMapping
-    public ResponseEntity<Patient> criar(@Valid @RequestBody PatientDTO request) {
-        Patient patient = patientService.createPatient(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(patient);
-    }
-
     @PutMapping("/{id}")
-    public ResponseEntity<Patient> atualizar(@PathVariable Long id, @Valid @RequestBody PatientDTO request) {
-        Patient patient = patientService.updatePatient(id, request);
-        return ResponseEntity.ok(patient);
+    public ResponseEntity<Patient> atualizar(@PathVariable Long id, @Valid @RequestBody PatientDTO dto) {
+        return ResponseEntity.ok(patientService.updatePatient(id, dto));
     }
 
     @DeleteMapping("/{id}")
@@ -51,4 +44,5 @@ public class PatientController {
         patientService.deletePatient(id);
         return ResponseEntity.noContent().build();
     }
+
 }

@@ -51,8 +51,8 @@ public class RoomService {
     }
 
 
-    public void createRoomsBulk(Ward ward, String specialty, int quantidadeQuartos, Integer quantidadeLeitosPorQuarto) {
-        for (int i = 1; i <= quantidadeQuartos; i++) {
+    public void createRoomsBulk(Ward ward, String specialty, Integer quantidadeQuartos, Integer quantidadeLeitosPorQuarto) {
+        for (Integer i = 1; i <= quantidadeQuartos; i++) {
             Room room = new Room();
             room.setWard(ward);
             room.setRoomCode(generateRoomCode(specialty, i));

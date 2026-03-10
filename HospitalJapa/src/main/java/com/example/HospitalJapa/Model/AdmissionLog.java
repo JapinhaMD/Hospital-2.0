@@ -1,5 +1,6 @@
 package com.example.HospitalJapa.Model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
@@ -11,6 +12,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Getter
 @Setter
+
 public class AdmissionLog {
 
     @Id
@@ -19,10 +21,12 @@ public class AdmissionLog {
 
     @ManyToOne
     @JoinColumn(name = "bed_id", nullable = false)
+
     private Bed bed;
 
     @ManyToOne
     @JoinColumn(name = "patient_id", nullable = false)
+
     private Patient patient;
 
     @Column(nullable = false)

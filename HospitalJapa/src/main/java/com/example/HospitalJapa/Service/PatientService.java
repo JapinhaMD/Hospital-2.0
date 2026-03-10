@@ -26,6 +26,7 @@ public class PatientService {
         patient.setName(dto.getName());
         patient.setCpf(dto.getCpf());
         patient.setPhone(dto.getPhone());
+        patient.setIsHospitalized(false);
 
         return patientRepository.save(patient);
     }
@@ -42,7 +43,13 @@ public class PatientService {
 
     public List<PatientDTO> getAllPatients() {
         return patientRepository.findAll().stream()
-                .map(this::convertToDTO)
+                .map(patient -> new PatientDTO(
+                        patient.getId(),
+                        patient.getName(),
+                        patient.getCpf(),
+                        patient.getPhone(),
+                        patient.getIsHospitalized()
+                ))
                 .collect(Collectors.toList());
     }
 

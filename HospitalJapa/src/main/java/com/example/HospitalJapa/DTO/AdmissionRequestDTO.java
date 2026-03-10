@@ -8,3 +8,4 @@ public record AdmissionRequestDTO(
         @NotNull(message = "O ID do leito é obrigatório") Long bedId,
         @NotNull(message = "A especialidade é obrigatória") Especialidade specialty
 ) {}
+
