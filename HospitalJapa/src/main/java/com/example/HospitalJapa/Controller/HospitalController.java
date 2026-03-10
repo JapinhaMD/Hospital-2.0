@@ -1,6 +1,8 @@
 package com.example.HospitalJapa.Controller;
-import com.example.HospitalJapa.Model.Hospital;
-import com.example.HospitalJapa.Service.HospitalService;
+
+import com.example.HospitalJapa.DTO.HospitalDTO;
+import com.example.HospitalJapa.Model.*;
+import com.example.HospitalJapa.Service.*;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,38 +14,56 @@ import java.util.List;
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/hospital")
-
 public class HospitalController {
 
-    @Autowired
-    private HospitalService service;
+    @Autowired private HospitalService hospitalService;
+    @Autowired private RoomService roomService;
 
     @GetMapping
-    public List<Hospital> listar() {
-        return service.listarTodos();
+    public ResponseEntity<List<Hospital>> listarTodos() {
+        return ResponseEntity.ok(hospitalService.listarTodos());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Hospital> buscarPorId(@PathVariable Long id) {
+        return ResponseEntity.ok(hospitalService.buscarPorId(id));
     }
 
     @PostMapping
-    public ResponseEntity<Hospital> criar(@Valid @RequestBody Hospital hospital) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(service.salvar(hospital));
+    public ResponseEntity<Hospital> criarHospitalCompleto(@Valid @RequestBody HospitalDTO dto) {
+        Hospital hospitalCriado = hospitalService.createHospitalCompleto(dto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(hospitalCriado);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Hospital> atualizar(@PathVariable Long id, @Valid @RequestBody Hospital hospitalAtualizado) {
+        Hospital hospital = hospitalService.updateHospital(id, hospitalAtualizado);
+        return ResponseEntity.ok(hospital);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletar(@PathVariable Long id) {
-        service.deletar(id);
+        hospitalService.deleteHospital(id);
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Hospital> atualizar(@PathVariable Long id, @Valid @RequestBody Hospital hospital) {
-        return ResponseEntity.ok(service.atualizar(id, hospital));
+    @GetMapping("/wards/{wardId}/rooms")
+    public ResponseEntity<List<Room>> listarQuartosDAla(@PathVariable Long wardId) {
+        // CORREÇÃO: O nome do método no Service é getRoomsByWardId
+        return ResponseEntity.ok(roomService.getRoomsByWardId(wardId));
     }
 
-
-    @GetMapping("/{id}")
-    public ResponseEntity<Hospital> buscar(@PathVariable Long id) {
-        return ResponseEntity.ok(service.buscarPorId(id));
+    @GetMapping("/rooms/{roomId}")
+    public ResponseEntity<Room> buscarQuarto(@PathVariable Long roomId) {
+        return ResponseEntity.ok(roomService.getRoomById(roomId));
     }
 
-
+    @PostMapping("/wards/{wardId}/rooms")
+    public ResponseEntity<Room> criarQuarto(
+            @PathVariable Long wardId,
+            @Valid @RequestBody Room room) {
+        // Mantive a chamada ao HospitalService pois você definiu a lógica lá
+        Room roomCriado = hospitalService.createRoom(wardId, room);
+        return ResponseEntity.status(HttpStatus.CREATED).body(roomCriado);
+    }
 }
