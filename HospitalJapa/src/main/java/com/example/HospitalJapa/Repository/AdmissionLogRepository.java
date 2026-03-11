@@ -15,14 +15,20 @@ public interface AdmissionLogRepository extends JpaRepository<AdmissionLog, Long
 
     Optional<AdmissionLog> findById (Long id);
 
-    @Query("SELECT a FROM AdmissionLog a " + "WHERE a.patient.id = :patientId " + "AND a.patient.isHospitalized = true")
+    @Query("SELECT a FROM AdmissionLog a " + "WHERE a.patient.id = :patientId " + "AND a.patient.isHospitalized = true" )
     Optional<AdmissionLog> findActiveAdmissionByPatientId(@Param("patientId") Long patientId);
 
+
+    //Criar requisição que retorne pelo id do paciente que está internado
     @Query("SELECT a FROM AdmissionLog a " + "WHERE a.patient.id = :patientId " + "AND a.patient.isHospitalized = true ")
     Optional<AdmissionLog> findInfosPatientId(@Param("patientId") Long patientId);
 
+
+    //Criar requisição paginada que retorne o histórico de internamento de um paciente contendo
     @Query("SELECT a FROM AdmissionLog a " + "WHERE a.patient.id = :patientId " + "ORDER BY a.dateTime DESC")
     Page<AdmissionLog> findHistoryByPatientId(@Param("patientId") Long patientId, Pageable pageable);
+
+
 
     @Query("SELECT a FROM AdmissionLog a " + "WHERE a.patient.isHospitalized = true " + "ORDER BY a.patient.name ASC")
     List<AdmissionLog> findAllActiveAdmissions();

@@ -1,8 +1,5 @@
 package com.example.HospitalJapa.Controller;
 
-import com.example.HospitalJapa.DTO.AvailableRoomDTO;
-import com.example.HospitalJapa.DTO.RoomStatusDTO;
-import com.example.HospitalJapa.DTO.SpecialtyStatusDTO;
 import com.example.HospitalJapa.Model.Room;
 import com.example.HospitalJapa.Service.RoomService;
 import jakarta.validation.Valid;
@@ -50,20 +47,6 @@ public class RoomController {
     }
 
 
-    @GetMapping("/status")
-    public ResponseEntity<List<SpecialtyStatusDTO>> getStats() {
-        return ResponseEntity.ok(roomService.getRoomsStatsBySpecialty());
-    }
 
-
-    @GetMapping("/available")
-    public ResponseEntity<List<AvailableRoomDTO>> getAvailableRooms() {
-        return ResponseEntity.ok(roomService.getAvailableRooms());
-    }
-
-    @GetMapping("/count")
-    public ResponseEntity<List<RoomStatusDTO>> getCountByStatus() {
-        return ResponseEntity.ok(roomService.getRoomStatusStats());
-    }
 
 }

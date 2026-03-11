@@ -19,15 +19,10 @@ public class BedController {
     private BedService bedService;
 
 
+
     @GetMapping("/{id}")
     public ResponseEntity<BedDTO> findById(@PathVariable Long id) {
         return ResponseEntity.ok(bedService.getBedDTOById(id));
-    }
-
-
-    @GetMapping
-    public ResponseEntity<List<BedResponseDTO>> getAll() {
-        return ResponseEntity.ok(bedService.listAll());
     }
 
 
@@ -44,10 +39,6 @@ public class BedController {
     }
 
 
-    @GetMapping("/available")
-    public ResponseEntity<List<BedResponseDTO>> getAvailableBySpecialty(@RequestParam Especialidade specialty) {
-        List<BedResponseDTO> report = bedService.listAvailableBySpecialty(specialty);
-        return ResponseEntity.ok(report);
-    }
+
 
 }

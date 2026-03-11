@@ -24,8 +24,6 @@ public class AdmissionController {
     @Autowired
     private AdmissionService admissionService;
 
-    @Autowired
-    private AdmissionLogRepository admissionLogRepository;
 
 
     @GetMapping
@@ -48,29 +46,4 @@ public class AdmissionController {
     }
 
 
-    @GetMapping("/patient/{patientId}/details")
-    public ResponseEntity<PatientHospitalDetailsDTO> getAdmissionDetails(@PathVariable Long patientId) {
-        return ResponseEntity.ok(admissionService.getInfosPatient(patientId));
-    }
-
-
-    @GetMapping("/patient/{patientId}/history")
-    public ResponseEntity<Page<PatientHistoryDTO>> getHistory(
-            @PathVariable Long patientId,
-            @PageableDefault(size = 10, sort = "dateTime", direction = Sort.Direction.DESC) Pageable pageable) {
-
-        return ResponseEntity.ok(admissionService.getHistoryPatient(patientId, pageable));
-    }
-
-
-    @GetMapping("/active")
-    public ResponseEntity<Map<String, List<ActiveAdmissionDTO>>> getActiveBySpecialty() {
-        return ResponseEntity.ok(admissionService.getAllCharged());
-    }
-
-    @GetMapping("/history/{bedId}")
-    public ResponseEntity<List<BedHistoryDTO>> getBedHistory(@PathVariable Long bedId) {
-        List<BedHistoryDTO> history = admissionService.getBedHistory(bedId);
-        return ResponseEntity.ok(history);
-    }
 }

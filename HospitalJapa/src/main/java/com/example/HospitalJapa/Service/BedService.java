@@ -70,30 +70,8 @@ public class BedService {
     }
 
 
-    public List<BedResponseDTO> listAll() {
-        return bedRepository.findAll().stream()
-                .map(b -> new BedResponseDTO(
-                        b.getId(),
-                        b.getRoom().getWard().getHospital().getId(),
-                        b.getBedNumber() != null ? b.getBedNumber(): "S/N",
-                        b.getStatus(),
-                        b.getRoom().getRoomCode()
-                ))
-                .toList();
-    }
 
 
-    public List<BedResponseDTO> listAvailableBySpecialty(Especialidade specialty) {
-        List<Bed> beds = bedRepository.findAvailableBedsBySpecialty(specialty);
 
-        return beds.stream()
-                .map(b -> new BedResponseDTO(
-                        b.getId(),
-                        b.getRoom().getWard().getHospital().getId(),
-                        b.getBedNumber() != null ? b.getBedNumber(): "S/N",
-                        b.getStatus(),
-                        b.getRoom().getRoomCode()
-                ))
-                .toList();
-    }
+
 }

@@ -53,10 +53,6 @@ public class PatientController {
     }
 
 
-    @GetMapping("/location/{patientId}")
-    public ResponseEntity<PatientLocationDTO> getPatientLocation(@PathVariable Long patientId) {
-        PatientLocationDTO location = patientService.localizatePatient(patientId);
-        return ResponseEntity.ok(location);
-    }
+
 
 }

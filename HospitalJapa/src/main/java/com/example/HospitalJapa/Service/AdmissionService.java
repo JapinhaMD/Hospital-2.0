@@ -113,59 +113,5 @@ public class AdmissionService {
     }
 
 
-    public PatientHospitalDetailsDTO getInfosPatient(Long patientId) {
-        AdmissionLog log = admissionLogRepository.findInfosPatientId(patientId)
-                .orElseThrow(() -> new RuntimeException("Paciente não encontrado ou não possui internação ativa."));
-
-        return new PatientHospitalDetailsDTO(
-                log.getBed().getRoom().getWard().getHospital().getName(),
-                log.getBed().getRoom().getWard().getSpecialty().toString(),
-                log.getBed().getRoom().getRoomCode(),
-                log.getPatient().getName(),
-                log.getDateTime()
-        );
-    }
-
-
-    public Page<PatientHistoryDTO> getHistoryPatient(Long patientId, Pageable pageable) {
-        Page<AdmissionLog> logs = admissionLogRepository.findHistoryByPatientId(patientId, pageable);
-
-        return logs.map(log -> new PatientHistoryDTO(
-                log.getPatient().getName(),
-                log.getBed().getRoom().getWard().getSpecialty().toString(),
-                log.getDateTime()
-        ));
-    }
-
-
-    public Map<String, List<ActiveAdmissionDTO>> getAllCharged() {
-        List<AdmissionLog> activeLogs = admissionLogRepository.findAllActiveAdmissions();
-
-        return activeLogs.stream()
-                .map(log -> {
-                    long days = ChronoUnit.DAYS.between(log.getDateTime(), LocalDateTime.now());
-                    return new ActiveAdmissionDTO(
-                            log.getPatient().getName(),
-                            log.getBed().getRoom().getWard().getSpecialty().toString(),
-                            log.getDateTime(),
-                            days
-                    );
-                })
-                .collect(Collectors.groupingBy(ActiveAdmissionDTO::wardSpecialty));
-    }
-
-
-    public List<BedHistoryDTO> getBedHistory(Long bedId) {
-        List<AdmissionLog> logs = admissionLogRepository.findHistoryByBedId(bedId);
-
-        return logs.stream()
-                .map(log -> new BedHistoryDTO(
-                        log.getBed().getBedNumber(),
-                        log.getPatient().getName(),
-                        log.getDateTime(),
-                        log.getEventType().toString()
-                ))
-                .toList();
-    }
 
 }
