@@ -1,14 +1,18 @@
 package com.example.HospitalJapa.Service;
 
-import com.example.HospitalJapa.DTO.AdmissionLogDTO;
+import com.example.HospitalJapa.DTO.*;
 import com.example.HospitalJapa.Model.*;
-import com.example.HospitalJapa.DTO.AdmissionRequestDTO;
 import com.example.HospitalJapa.Repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class AdmissionService {
@@ -102,6 +106,62 @@ public class AdmissionService {
                         log.getPatient().getName(),
                         log.getDateTime(),
                         log.getEventType()
+                ))
+                .toList();
+    }
+
+
+    public PatientHospitalDetailsDTO getInfosPatient(Long patientId) {
+        AdmissionLog log = admissionLogRepository.findInfosPatientId(patientId)
+                .orElseThrow(() -> new RuntimeException("Paciente não encontrado ou não possui internação ativa."));
+
+        return new PatientHospitalDetailsDTO(
+                log.getBed().getRoom().getWard().getHospital().getName(),
+                log.getBed().getRoom().getWard().getSpecialty().toString(),
+                log.getBed().getRoom().getRoomCode(),
+                log.getPatient().getName(),
+                log.getDateTime()
+        );
+    }
+
+
+    public Page<PatientHistoryDTO> getHistoryPatient(Long patientId, Pageable pageable) {
+        Page<AdmissionLog> logs = admissionLogRepository.findHistoryByPatientId(patientId, pageable);
+
+        return logs.map(log -> new PatientHistoryDTO(
+                log.getPatient().getName(),
+                log.getBed().getRoom().getWard().getSpecialty().toString(),
+                log.getDateTime()
+        ));
+    }
+
+
+    public Map<String, List<ActiveAdmissionDTO>> getAllCharged() {
+        List<AdmissionLog> activeLogs = admissionLogRepository.findAllActiveAdmissions();
+
+        return activeLogs.stream()
+                .map(log -> {
+                    long days = ChronoUnit.DAYS.between(log.getDateTime(), LocalDateTime.now());
+                    return new ActiveAdmissionDTO(
+                            log.getPatient().getName(),
+                            log.getBed().getRoom().getWard().getSpecialty().toString(),
+                            log.getDateTime(),
+                            days
+                    );
+                })
+                .collect(Collectors.groupingBy(ActiveAdmissionDTO::wardSpecialty));
+    }
+
+
+    public List<BedHistoryDTO> getBedHistory(Long bedId) {
+        List<AdmissionLog> logs = admissionLogRepository.findHistoryByBedId(bedId);
+
+        return logs.stream()
+                .map(log -> new BedHistoryDTO(
+                        log.getBed().getBedNumber(),
+                        log.getPatient().getName(),
+                        log.getDateTime(),
+                        log.getEventType().toString()
                 ))
                 .toList();
     }

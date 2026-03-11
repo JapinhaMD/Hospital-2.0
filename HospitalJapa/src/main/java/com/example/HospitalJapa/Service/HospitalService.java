@@ -73,7 +73,7 @@ public class HospitalService {
                                 r.getRoomCode(),
                                 r.getStatus(),
                                 r.getBeds().stream()
-                                        .map(b -> new BedResponseDTO(b.getId(),b.getBedNumber(), b.getStatus()))
+                                        .map(b -> new BedResponseDTO(b.getId(),b.getRoom().getWard().getHospital().getId(),b.getBedNumber(), b.getStatus(), b.getRoom().getWard().getSpecialty().toString()))
                                         .toList()
                         )).toList()
                 )).toList();

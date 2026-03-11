@@ -4,16 +4,20 @@ import com.example.HospitalJapa.DTO.*;
 import com.example.HospitalJapa.Model.*;
 import com.example.HospitalJapa.Service.AdmissionService;
 import com.example.HospitalJapa.Repository.AdmissionLogRepository;
+import com.example.HospitalJapa.Service.PatientService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -47,13 +51,29 @@ public class AdmissionController {
     }
 
 
-    @GetMapping("/patient/{patientId}/history")
-    public ResponseEntity<Page<AdmissionLog>> getPatientHistory(
-            @PathVariable Long patientId,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
+    @GetMapping("/patient/{patientId}/details")
+    public ResponseEntity<PatientHospitalDetailsDTO> getAdmissionDetails(@PathVariable Long patientId) {
+        return ResponseEntity.ok(admissionService.getInfosPatient(patientId));
+    }
 
-        Pageable pageable = PageRequest.of(page, size);
-        return ResponseEntity.ok(admissionLogRepository.findByPatientIdOrderByDateTimeDesc(patientId, pageable));
+
+    @GetMapping("/patient/{patientId}/history")
+    public ResponseEntity<Page<PatientHistoryDTO>> getHistory(
+            @PathVariable Long patientId,
+            @PageableDefault(size = 10, sort = "dateTime", direction = Sort.Direction.DESC) Pageable pageable) {
+
+        return ResponseEntity.ok(admissionService.getHistoryPatient(patientId, pageable));
+    }
+
+
+    @GetMapping("/active")
+    public ResponseEntity<Map<String, List<ActiveAdmissionDTO>>> getActiveBySpecialty() {
+        return ResponseEntity.ok(admissionService.getAllCharged());
+    }
+
+    @GetMapping("/history/{bedId}")
+    public ResponseEntity<List<BedHistoryDTO>> getBedHistory(@PathVariable Long bedId) {
+        List<BedHistoryDTO> history = admissionService.getBedHistory(bedId);
+        return ResponseEntity.ok(history);
     }
 }

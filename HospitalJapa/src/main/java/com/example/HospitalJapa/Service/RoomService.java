@@ -1,5 +1,9 @@
 package com.example.HospitalJapa.Service;
 
+import com.example.HospitalJapa.DTO.AvailableRoomDTO;
+import com.example.HospitalJapa.DTO.BedResponseDTO;
+import com.example.HospitalJapa.DTO.RoomAllDTO;
+import com.example.HospitalJapa.DTO.SpecialtyStatusDTO;
 import com.example.HospitalJapa.Model.Bed;
 import com.example.HospitalJapa.Model.Room;
 import com.example.HospitalJapa.Model.Ward;
@@ -11,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class RoomService {
@@ -97,4 +102,74 @@ public class RoomService {
     public void deleteRoom(Long id) {
         roomRepository.deleteById(id);
     }
+
+
+    public List<SpecialtyStatusDTO> getRoomsStatsBySpecialty() {
+        List<Room> allRooms = roomRepository.findAll();
+
+        return allRooms.stream()
+                .collect(Collectors.groupingBy(r -> r.getWard().getSpecialty()))
+                .entrySet().stream()
+                .map(entry -> {
+                    String specialty = entry.getKey().toString();
+                    List<Room> rooms = entry.getValue();
+                    long total = rooms.size();
+                    long occupied = rooms.stream()
+                            .filter(r -> r.getBeds().stream()
+                                    .anyMatch(b -> "OCCUPIED".equals(b.getStatus())))
+                            .count();
+
+                    long free = total - occupied;
+
+                    return new SpecialtyStatusDTO(specialty, total, free, occupied);
+                })
+                .toList();
+    }
+
+
+    public List<RoomAllDTO> listarTodos() {
+        return roomRepository.findAll().stream()
+                .map(this::convertToDTO)
+                .toList();
+    }
+
+
+    private RoomAllDTO convertToDTO(Room r) {
+        var ward = r.getWard();
+        var hospital = (ward != null) ? ward.getHospital() : null;
+
+        List<BedResponseDTO> bedDTOs = r.getBeds().stream()
+                .map(b -> new BedResponseDTO(
+                        b.getId(),
+                        b.getRoom().getWard().getHospital().getId(),
+                        b.getStatus(),
+                        b.getBedNumber(),
+                       b.getRoom().getWard().getSpecialty().toString()
+                ))
+                .toList();
+
+        return new RoomAllDTO(
+                r.getId(),
+                r.getRoomCode(),
+                r.getStatus(),
+                ward != null ? ward.getSpecialty().toString() : "N/A",
+                hospital != null ? hospital.getId() : null,
+                hospital != null ? hospital.getName() : "N/A",
+                bedDTOs
+        );
+    }
+
+
+    public List<AvailableRoomDTO> getAvailableRooms() {
+        List<Room> rooms = roomRepository.findRoomsWithAvailableBeds();
+
+        return rooms.stream()
+                .map(r -> new AvailableRoomDTO(
+                        r.getWard().getSpecialty().toString(),
+                        r.getRoomCode()
+                ))
+                .toList();
+    }
+
+
 }

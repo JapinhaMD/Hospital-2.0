@@ -20,7 +20,6 @@ public class HospitalController {
 
     @Autowired
     private HospitalService hospitalService;
-
     @GetMapping
     public ResponseEntity<List<HospitalResponseDTO>> listarTodos() {
         List<HospitalResponseDTO> response = hospitalService.listarTodos()

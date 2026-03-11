@@ -1,6 +1,7 @@
 package com.example.HospitalJapa.Controller;
 
 import com.example.HospitalJapa.DTO.PatientDTO;
+import com.example.HospitalJapa.DTO.PatientLocationDTO;
 import com.example.HospitalJapa.Model.Patient;
 import com.example.HospitalJapa.Service.PatientService;
 import jakarta.validation.Valid;
@@ -47,6 +48,13 @@ public class PatientController {
     public ResponseEntity<Void> deletar(@PathVariable Long id) {
         patientService.deletePatient(id);
         return ResponseEntity.noContent().build();
+    }
+
+
+    @GetMapping("/location/{patientId}")
+    public ResponseEntity<PatientLocationDTO> getPatientLocation(@PathVariable Long patientId) {
+        PatientLocationDTO location = patientService.localizarPaciente(patientId);
+        return ResponseEntity.ok(location);
     }
 
 }
