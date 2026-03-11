@@ -31,15 +31,18 @@ public class PatientService {
         return patientRepository.save(patient);
     }
 
+
     public Patient getPatientById(Long id) {
         return patientRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Paciente não encontrado com id: " + id));
     }
 
+
     public PatientDTO getPatientDTOById(Long id) {
         Patient patient = getPatientById(id);
         return convertToDTO(patient);
     }
+
 
     public List<PatientDTO> getAllPatients() {
         return patientRepository.findAll().stream()
@@ -53,6 +56,7 @@ public class PatientService {
                 .collect(Collectors.toList());
     }
 
+
     @Transactional
     public Patient updatePatient(Long id, PatientDTO dto) {
         Patient patient = getPatientById(id);
@@ -61,15 +65,18 @@ public class PatientService {
         return patientRepository.save(patient);
     }
 
+
     @Transactional
     public void deletePatient(Long id) {
         patientRepository.deleteById(id);
     }
 
+
     public Patient getPatientByCpf(String cpf) {
         return patientRepository.findByCpf(cpf)
                 .orElseThrow(() -> new RuntimeException("Paciente não encontrado com CPF: " + cpf));
     }
+
 
     private PatientDTO convertToDTO(Patient patient) {
         PatientDTO dto = new PatientDTO();

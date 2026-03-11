@@ -7,6 +7,7 @@ import lombok.*;
 @AllArgsConstructor
 @Getter
 @Setter
+
 public class BedDTO {
     private Long id;
     private String bedNumber;

@@ -1,6 +1,7 @@
 package com.example.HospitalJapa.Controller;
 
 import com.example.HospitalJapa.DTO.HospitalDTO;
+import com.example.HospitalJapa.DTO.HospitalResponseDTO;
 import com.example.HospitalJapa.Model.Hospital;
 import com.example.HospitalJapa.Service.HospitalService;
 import jakarta.validation.Valid;
@@ -10,35 +11,46 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/hospital")
 public class HospitalController {
 
-    @Autowired private HospitalService hospitalService;
+    @Autowired
+    private HospitalService hospitalService;
 
     @GetMapping
-    public ResponseEntity<List<Hospital>> listarTodos() {
-        return ResponseEntity.ok(hospitalService.listarTodos());
+    public ResponseEntity<List<HospitalResponseDTO>> listarTodos() {
+        List<HospitalResponseDTO> response = hospitalService.listarTodos()
+                .stream()
+                .map(hospitalService::convertToResponseDTO)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(response);
     }
+
 
     @GetMapping("/{id}")
-    public ResponseEntity<Hospital> buscarPorId(@PathVariable Long id) {
-        return ResponseEntity.ok(hospitalService.buscarPorId(id));
+    public ResponseEntity<HospitalResponseDTO> buscarPorId(@PathVariable Long id) {
+        Hospital hospital = hospitalService.buscarPorId(id);
+        return ResponseEntity.ok(hospitalService.convertToResponseDTO(hospital));
     }
+
 
     @PostMapping
-    public ResponseEntity<Hospital> criarHospitalCompleto(@Valid @RequestBody HospitalDTO dto) {
-        Hospital hospitalCriado = hospitalService.createHospitalCompleto(dto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(hospitalCriado);
+    public ResponseEntity<HospitalResponseDTO> createHospital(@Valid @RequestBody HospitalDTO dto) {
+        HospitalResponseDTO response = hospitalService.createHospital(dto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
+
     @PutMapping("/{id}")
-    public ResponseEntity<Hospital> atualizar(@PathVariable Long id, @Valid @RequestBody Hospital hospitalAtualizado) {
+    public ResponseEntity<HospitalResponseDTO> atualizar(@PathVariable Long id, @Valid @RequestBody Hospital hospitalAtualizado) {
         Hospital hospital = hospitalService.updateHospital(id, hospitalAtualizado);
-        return ResponseEntity.ok(hospital);
+        return ResponseEntity.ok(hospitalService.convertToResponseDTO(hospital));
     }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletar(@PathVariable Long id) {

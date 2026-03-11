@@ -24,20 +24,24 @@ public class PatientController {
         return ResponseEntity.status(HttpStatus.CREATED).body(patientService.createPatient(dto));
     }
 
+
     @GetMapping
     public ResponseEntity<List<PatientDTO>> listarTodos() {
         return ResponseEntity.ok(patientService.getAllPatients());
     }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<PatientDTO> buscarPorId(@PathVariable Long id) {
         return ResponseEntity.ok(patientService.getPatientDTOById(id));
     }
 
+
     @PutMapping("/{id}")
     public ResponseEntity<Patient> atualizar(@PathVariable Long id, @Valid @RequestBody PatientDTO dto) {
         return ResponseEntity.ok(patientService.updatePatient(id, dto));
     }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletar(@PathVariable Long id) {

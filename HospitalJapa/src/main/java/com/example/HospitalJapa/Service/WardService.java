@@ -30,14 +30,14 @@ public class WardService {
         return convertToDTO(ward);
     }
 
+
     public List<Ward> getWardsByHospitalId(Long hospitalId) {
         return wardRepository.findByHospitalId(hospitalId);
     }
 
+
     @Transactional
     public void createWard(Hospital hospital, List<HospitalDTO.WardRequestDTO> wardDtos) {
-        if (wardDtos == null) return;
-
         for (HospitalDTO.WardRequestDTO wardDto : wardDtos) {
             Ward ward = new Ward();
             ward.setSpecialty(wardDto.specialty());
@@ -47,6 +47,11 @@ public class WardService {
             Integer qtdQuartos = wardDto.quantidadeQuartos();
             Integer qtdLeitos = wardDto.quantidadeLeitosPorQuarto();
 
+
+            ward.setQuantidadeQuartos(qtdQuartos);
+            ward.setQuantidadeLeitosPorQuarto(qtdLeitos);
+
+
             if (qtdQuartos != null && qtdQuartos > 0) {
                 roomService.createRoomsBulk(ward, wardDto.specialty().toString(), qtdQuartos, qtdLeitos);
             }
@@ -55,10 +60,12 @@ public class WardService {
         }
     }
 
+
     @Transactional
     public void deleteWard(Long id) {
         wardRepository.deleteById(id);
     }
+
 
     private WardDTO convertToDTO(Ward ward) {
         WardDTO dto = new WardDTO();

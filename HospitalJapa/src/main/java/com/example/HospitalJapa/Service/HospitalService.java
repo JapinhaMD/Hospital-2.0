@@ -1,8 +1,8 @@
 package com.example.HospitalJapa.Service;
 
-import com.example.HospitalJapa.DTO.HospitalDTO;
-import com.example.HospitalJapa.Model.*;
-import com.example.HospitalJapa.Repository.*;
+import com.example.HospitalJapa.DTO.*;
+import com.example.HospitalJapa.Model.Hospital;
+import com.example.HospitalJapa.Repository.HospitalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,24 +20,29 @@ public class HospitalService {
         return hospitalRepository.findAll();
     }
 
+
     public Hospital buscarPorId(Long id) {
         return hospitalRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Hospital não encontrado com id: " + id));
     }
 
+
     @Transactional
-    public Hospital createHospitalCompleto(HospitalDTO dto) {
+    public HospitalResponseDTO createHospital(HospitalDTO dto) {
         Hospital hospital = new Hospital();
         hospital.setName(dto.name());
         hospital.setPhone(dto.phone());
         hospital.setCnpj(dto.cnpj());
         hospital.setWards(new ArrayList<>());
 
-        if (dto.wards() != null && !dto.wards().isEmpty()) {
+        if (dto.wards() != null) {
             wardService.createWard(hospital, dto.wards());
         }
 
-        return hospitalRepository.save(hospital);
+
+        Hospital salvo = hospitalRepository.saveAndFlush(hospital);
+
+        return convertToResponseDTO(salvo);
     }
 
     @Transactional
@@ -49,7 +54,32 @@ public class HospitalService {
         return hospitalRepository.save(hospital);
     }
 
+
     public void deleteHospital(Long id) {
         hospitalRepository.deleteById(id);
+    }
+
+
+    public HospitalResponseDTO convertToResponseDTO(Hospital hospital) {
+        List<WardResponseDTO> wardDTOs = hospital.getWards().stream()
+                .map(w -> new WardResponseDTO(
+                        w.getId(),
+                        w.getSpecialty() != null ? w.getSpecialty().toString() : null,
+                        hospital.getId(),
+                        w.getQuantidadeQuartos(),
+                        w.getQuantidadeLeitosPorQuarto(),
+                        w.getRooms().stream().map(r -> new RoomResponseDTO(
+                                r.getId(),
+                                r.getRoomCode(),
+                                r.getStatus(),
+                                r.getBeds().stream()
+                                        .map(b -> new BedResponseDTO(b.getId(),b.getBedNumber(), b.getStatus()))
+                                        .toList()
+                        )).toList()
+                )).toList();
+
+        return new HospitalResponseDTO(
+                hospital.getId(), hospital.getName(), hospital.getPhone(), hospital.getCnpj(), wardDTOs
+        );
     }
 }

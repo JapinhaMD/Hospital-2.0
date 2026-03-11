@@ -32,11 +32,13 @@ public class AdmissionController {
         return ResponseEntity.ok(admissionService.listarTodos());
     }
 
+
     @PostMapping("/admit")
     public ResponseEntity<String> internarPaciente(@Valid @RequestBody AdmissionRequestDTO request) {
         admissionService.admitPatient(request);
         return ResponseEntity.status(HttpStatus.CREATED).body("Paciente internado com sucesso");
     }
+
 
     @PostMapping("/discharge/{bedId}")
     public ResponseEntity<String> darAltaPaciente(@PathVariable Long bedId) {

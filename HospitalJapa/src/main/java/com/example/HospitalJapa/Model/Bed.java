@@ -26,7 +26,6 @@ public class Bed {
 
     @ManyToOne
     @JoinColumn(name = "room_id")
-    @JsonIgnore
     private Room room;
 
     @ManyToOne

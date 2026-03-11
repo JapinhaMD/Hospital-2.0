@@ -7,6 +7,7 @@ import lombok.*;
 @AllArgsConstructor
 @Getter
 @Setter
+
 public class PatientDTO {
     private Long id;
     private String name;

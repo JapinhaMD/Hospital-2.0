@@ -39,6 +39,7 @@ public class RoomController {
         return ResponseEntity.status(HttpStatus.CREATED).body(roomCriado);
     }
 
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletar(@PathVariable Long id) {
         roomService.deleteRoom(id);

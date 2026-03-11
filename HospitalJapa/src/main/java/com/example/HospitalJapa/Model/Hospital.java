@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
+
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -32,5 +34,5 @@ public class Hospital {
     private String cnpj;
 
     @OneToMany(mappedBy = "hospital", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Ward> wards;
+    private List<Ward> wards = new ArrayList<>();
 }

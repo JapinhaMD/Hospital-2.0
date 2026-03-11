@@ -1,5 +1,6 @@
 package com.example.HospitalJapa.Service;
 
+import com.example.HospitalJapa.Model.Bed;
 import com.example.HospitalJapa.Model.Room;
 import com.example.HospitalJapa.Model.Ward;
 import com.example.HospitalJapa.Repository.RoomRepository;
@@ -52,7 +53,7 @@ public class RoomService {
 
 
     public void createRoomsBulk(Ward ward, String specialty, Integer quantidadeQuartos, Integer quantidadeLeitosPorQuarto) {
-        for (Integer i = 1; i <= quantidadeQuartos; i++) {
+        for (int i = 1; i <= quantidadeQuartos; i++) {
             Room room = new Room();
             room.setWard(ward);
             room.setRoomCode(generateRoomCode(specialty, i));
@@ -60,9 +61,14 @@ public class RoomService {
             room.setBeds(new ArrayList<>());
 
             if (quantidadeLeitosPorQuarto != null && quantidadeLeitosPorQuarto > 0) {
-                bedService.createBeds(room, quantidadeLeitosPorQuarto);
+                for (Integer j = 1; j <= quantidadeLeitosPorQuarto; j++) {
+                    Bed bed = new Bed();
+                    bed.setRoom(room);
+                    bed.setBedNumber(String.valueOf(j));
+                    bed.setStatus("UNOCCUPIED");
+                    room.getBeds().add(bed);
+                }
             }
-
             ward.getRooms().add(room);
         }
     }
@@ -85,6 +91,7 @@ public class RoomService {
         code.append("-").append(roomNumber);
         return code.toString();
     }
+
 
     @Transactional
     public void deleteRoom(Long id) {

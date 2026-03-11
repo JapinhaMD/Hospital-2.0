@@ -7,6 +7,8 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -30,5 +32,9 @@ public class Ward {
     private Hospital hospital;
 
     @OneToMany(mappedBy = "ward", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Room> rooms;
+    private List<Room> rooms = new ArrayList<>();
+
+    private Integer quantidadeLeitosPorQuarto;
+    private Integer quantidadeQuartos;
+
 }
