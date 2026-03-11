@@ -27,7 +27,6 @@ public class Room {
 
     @ManyToOne
     @JoinColumn(name = "ward_id")
-   // @JsonIgnore nao utilizar, pq vai que precisa em algum momento mostrar as infos
     private Ward ward;
 
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true)

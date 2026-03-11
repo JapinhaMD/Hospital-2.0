@@ -2,7 +2,6 @@ package com.example.HospitalJapa.Controller;
 
 import com.example.HospitalJapa.DTO.BedDTO;
 import com.example.HospitalJapa.DTO.BedResponseDTO;
-import com.example.HospitalJapa.Model.Bed;
 import com.example.HospitalJapa.Model.Especialidade;
 import com.example.HospitalJapa.Service.BedService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,25 +20,25 @@ public class BedController {
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<BedDTO> buscarPorId(@PathVariable Long id) {
+    public ResponseEntity<BedDTO> findById(@PathVariable Long id) {
         return ResponseEntity.ok(bedService.getBedDTOById(id));
     }
 
 
     @GetMapping
     public ResponseEntity<List<BedResponseDTO>> getAll() {
-        return ResponseEntity.ok(bedService.listarTodos());
+        return ResponseEntity.ok(bedService.listAll());
     }
 
 
     @GetMapping("/room/{roomId}")
-    public ResponseEntity<List<BedDTO>> listarPorQuarto(@PathVariable Long roomId) {
+    public ResponseEntity<List<BedDTO>> listByRoom(@PathVariable Long roomId) {
         return ResponseEntity.ok(bedService.getBedDTOsByRoomId(roomId));
     }
 
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletarLeito(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteBed(@PathVariable Long id) {
         bedService.deleteBed(id);
         return ResponseEntity.noContent().build();
     }

@@ -20,32 +20,34 @@ public class PatientController {
     @Autowired
     private PatientService patientService;
 
+
+
     @PostMapping
-    public ResponseEntity<Patient> criar(@Valid @RequestBody PatientDTO dto) {
+    public ResponseEntity<Patient> create(@Valid @RequestBody PatientDTO dto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(patientService.createPatient(dto));
     }
 
 
     @GetMapping
-    public ResponseEntity<List<PatientDTO>> listarTodos() {
+    public ResponseEntity<List<PatientDTO>> listAll() {
         return ResponseEntity.ok(patientService.getAllPatients());
     }
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<PatientDTO> buscarPorId(@PathVariable Long id) {
+    public ResponseEntity<PatientDTO> findById(@PathVariable Long id) {
         return ResponseEntity.ok(patientService.getPatientDTOById(id));
     }
 
 
     @PutMapping("/{id}")
-    public ResponseEntity<Patient> atualizar(@PathVariable Long id, @Valid @RequestBody PatientDTO dto) {
+    public ResponseEntity<Patient> update(@PathVariable Long id, @Valid @RequestBody PatientDTO dto) {
         return ResponseEntity.ok(patientService.updatePatient(id, dto));
     }
 
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletar(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         patientService.deletePatient(id);
         return ResponseEntity.noContent().build();
     }
@@ -53,7 +55,7 @@ public class PatientController {
 
     @GetMapping("/location/{patientId}")
     public ResponseEntity<PatientLocationDTO> getPatientLocation(@PathVariable Long patientId) {
-        PatientLocationDTO location = patientService.localizarPaciente(patientId);
+        PatientLocationDTO location = patientService.localizatePatient(patientId);
         return ResponseEntity.ok(location);
     }
 

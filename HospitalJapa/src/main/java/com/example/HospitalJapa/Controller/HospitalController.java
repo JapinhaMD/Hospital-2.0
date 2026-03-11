@@ -20,9 +20,12 @@ public class HospitalController {
 
     @Autowired
     private HospitalService hospitalService;
+
+
+
     @GetMapping
-    public ResponseEntity<List<HospitalResponseDTO>> listarTodos() {
-        List<HospitalResponseDTO> response = hospitalService.listarTodos()
+    public ResponseEntity<List<HospitalResponseDTO>> listAll() {
+        List<HospitalResponseDTO> response = hospitalService.listAll()
                 .stream()
                 .map(hospitalService::convertToResponseDTO)
                 .collect(Collectors.toList());
@@ -31,8 +34,8 @@ public class HospitalController {
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<HospitalResponseDTO> buscarPorId(@PathVariable Long id) {
-        Hospital hospital = hospitalService.buscarPorId(id);
+    public ResponseEntity<HospitalResponseDTO> findById(@PathVariable Long id) {
+        Hospital hospital = hospitalService.findById(id);
         return ResponseEntity.ok(hospitalService.convertToResponseDTO(hospital));
     }
 
@@ -45,14 +48,14 @@ public class HospitalController {
 
 
     @PutMapping("/{id}")
-    public ResponseEntity<HospitalResponseDTO> atualizar(@PathVariable Long id, @Valid @RequestBody Hospital hospitalAtualizado) {
+    public ResponseEntity<HospitalResponseDTO> update(@PathVariable Long id, @Valid @RequestBody Hospital hospitalAtualizado) {
         Hospital hospital = hospitalService.updateHospital(id, hospitalAtualizado);
         return ResponseEntity.ok(hospitalService.convertToResponseDTO(hospital));
     }
 
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletar(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         hospitalService.deleteHospital(id);
         return ResponseEntity.noContent().build();
     }

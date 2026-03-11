@@ -1,14 +1,11 @@
 package com.example.HospitalJapa.Controller;
 
 import com.example.HospitalJapa.DTO.*;
-import com.example.HospitalJapa.Model.*;
 import com.example.HospitalJapa.Service.AdmissionService;
 import com.example.HospitalJapa.Repository.AdmissionLogRepository;
-import com.example.HospitalJapa.Service.PatientService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -33,19 +30,19 @@ public class AdmissionController {
 
     @GetMapping
     public ResponseEntity<List<AdmissionLogDTO>> listarTodos() {
-        return ResponseEntity.ok(admissionService.listarTodos());
+        return ResponseEntity.ok(admissionService.listAll());
     }
 
 
     @PostMapping("/admit")
-    public ResponseEntity<String> internarPaciente(@Valid @RequestBody AdmissionRequestDTO request) {
+    public ResponseEntity<String> admitPatient(@Valid @RequestBody AdmissionRequestDTO request) {
         admissionService.admitPatient(request);
         return ResponseEntity.status(HttpStatus.CREATED).body("Paciente internado com sucesso");
     }
 
 
     @PostMapping("/discharge/{bedId}")
-    public ResponseEntity<String> darAltaPaciente(@PathVariable Long bedId) {
+    public ResponseEntity<String> dischargePatient(@PathVariable Long bedId) {
         admissionService.dischargePatient(bedId);
         return ResponseEntity.ok("Alta realizada com sucesso. O leito agora está em preparação.");
     }

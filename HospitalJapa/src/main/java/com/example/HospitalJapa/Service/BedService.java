@@ -70,7 +70,7 @@ public class BedService {
     }
 
 
-    public List<BedResponseDTO> listarTodos() {
+    public List<BedResponseDTO> listAll() {
         return bedRepository.findAll().stream()
                 .map(b -> new BedResponseDTO(
                         b.getId(),

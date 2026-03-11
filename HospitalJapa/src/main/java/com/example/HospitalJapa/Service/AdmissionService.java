@@ -99,7 +99,7 @@ public class AdmissionService {
     }
 
 
-    public List<AdmissionLogDTO> listarTodos() {
+    public List<AdmissionLogDTO> listAll() {
         return admissionLogRepository.findAll().stream()
                 .map(log -> new AdmissionLogDTO(
                         log.getId(),

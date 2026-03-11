@@ -13,9 +13,6 @@ import java.util.List;
 public interface RoomRepository extends JpaRepository<Room, Long> {
     List<Room> findByWardId(Long wardId);
 
-    @Query("SELECT r FROM Room r JOIN FETCH r.ward w")
-    List<Room> findAllWithWard();
-
     @Query("SELECT DISTINCT r FROM Room r " + "JOIN r.beds b " + "WHERE b.status = 'UNOCCUPIED'")
     List<Room> findRoomsWithAvailableBeds();
 }

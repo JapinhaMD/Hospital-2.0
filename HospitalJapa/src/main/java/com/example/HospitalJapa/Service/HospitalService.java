@@ -18,12 +18,12 @@ public class HospitalService {
 
 
 
-    public List<Hospital> listarTodos() {
+    public List<Hospital> listAll() {
         return hospitalRepository.findAll();
     }
 
 
-    public Hospital buscarPorId(Long id) {
+    public Hospital findById(Long id) {
         return hospitalRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Hospital não encontrado com id: " + id));
     }
@@ -50,7 +50,7 @@ public class HospitalService {
 
     @Transactional
     public Hospital updateHospital(Long id, Hospital hospitalAtualizado) {
-        Hospital hospital = buscarPorId(id);
+        Hospital hospital = findById(id);
         hospital.setName(hospitalAtualizado.getName());
         hospital.setPhone(hospitalAtualizado.getPhone());
         hospital.setCnpj(hospitalAtualizado.getCnpj());

@@ -19,18 +19,18 @@ public class WardController {
 
 
     @GetMapping("/hospital/{hospitalId}")
-    public ResponseEntity<List<Ward>> listarPorHospital(@PathVariable Long hospitalId) {
+    public ResponseEntity<List<Ward>> listByHospital(@PathVariable Long hospitalId) {
         return ResponseEntity.ok(wardService.getWardsByHospitalId(hospitalId));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<WardDTO> buscarPorId(@PathVariable Long id) {
+    public ResponseEntity<WardDTO> findById(@PathVariable Long id) {
         return ResponseEntity.ok(wardService.getWardDTOById(id));
     }
 
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletar(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         wardService.deleteWard(id);
         return ResponseEntity.noContent().build();
     }

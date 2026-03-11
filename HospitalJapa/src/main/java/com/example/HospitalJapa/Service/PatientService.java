@@ -89,7 +89,8 @@ public class PatientService {
         return dto;
     }
 
-    public PatientLocationDTO localizarPaciente(Long patientId) {
+
+    public PatientLocationDTO localizatePatient(Long patientId) {
         AdmissionLog log = admissionLogRepository.findActiveAdmissionByPatientId(patientId)
                 .orElseThrow(() -> new RuntimeException("Paciente não localizado ou já recebeu alta."));
 

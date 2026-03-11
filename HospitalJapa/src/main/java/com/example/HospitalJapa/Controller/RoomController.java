@@ -21,19 +21,19 @@ public class RoomController {
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<Room> buscarPorId(@PathVariable Long id) {
+    public ResponseEntity<Room> findById(@PathVariable Long id) {
         return ResponseEntity.ok(roomService.getRoomById(id));
     }
 
 
     @GetMapping("/ward/{wardId}")
-    public ResponseEntity<List<Room>> listarQuartosDaAla(@PathVariable Long wardId) {
+    public ResponseEntity<List<Room>> listWardsRooms(@PathVariable Long wardId) {
         return ResponseEntity.ok(roomService.getRoomsByWardId(wardId));
     }
 
 
     @PostMapping("/ward/{wardId}")
-    public ResponseEntity<Room> criarQuarto(
+    public ResponseEntity<Room> createRoom(
             @PathVariable Long wardId,
             @RequestParam(required = false) Integer qtdLeitos,
             @Valid @RequestBody Room room) {
@@ -44,11 +44,10 @@ public class RoomController {
 
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletar(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         roomService.deleteRoom(id);
         return ResponseEntity.noContent().build();
     }
-
 
 
     @GetMapping("/status")
