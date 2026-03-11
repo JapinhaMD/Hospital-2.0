@@ -19,6 +19,7 @@ public class WardService {
     @Autowired private RoomService roomService;
 
 
+
     public Ward getWardById(Long id) {
         return wardRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Ala não encontrada com id: " + id));

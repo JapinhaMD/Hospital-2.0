@@ -16,6 +16,8 @@ public class HospitalService {
     @Autowired private HospitalRepository hospitalRepository;
     @Autowired private WardService wardService;
 
+
+
     public List<Hospital> listarTodos() {
         return hospitalRepository.findAll();
     }
@@ -44,6 +46,7 @@ public class HospitalService {
 
         return convertToResponseDTO(salvo);
     }
+
 
     @Transactional
     public Hospital updateHospital(Long id, Hospital hospitalAtualizado) {

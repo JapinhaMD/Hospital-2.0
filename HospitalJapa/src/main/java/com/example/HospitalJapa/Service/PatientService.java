@@ -23,6 +23,7 @@ public class PatientService {
     private AdmissionLogRepository admissionLogRepository;
 
 
+
     @Transactional
     public Patient createPatient(PatientDTO dto) {
         if (patientRepository.findByCpf(dto.getCpf()).isPresent()) {
@@ -76,12 +77,6 @@ public class PatientService {
     @Transactional
     public void deletePatient(Long id) {
         patientRepository.deleteById(id);
-    }
-
-
-    public Patient getPatientByCpf(String cpf) {
-        return patientRepository.findByCpf(cpf)
-                .orElseThrow(() -> new RuntimeException("Paciente não encontrado com CPF: " + cpf));
     }
 
 

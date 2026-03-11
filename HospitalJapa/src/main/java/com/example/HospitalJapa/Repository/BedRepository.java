@@ -15,5 +15,4 @@ public interface BedRepository extends JpaRepository<Bed, Long> {
     @Query("SELECT b FROM Bed b WHERE b.status = 'UNOCCUPIED' AND b.room.ward.specialty = :specialty")
     List<Bed> findAvailableBedsBySpecialty(@Param("specialty") Especialidade specialty);
 
-    Optional<Bed> findByPatientId(Long patientId);
 }

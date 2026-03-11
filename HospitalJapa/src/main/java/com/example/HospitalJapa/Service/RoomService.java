@@ -1,9 +1,6 @@
 package com.example.HospitalJapa.Service;
 
-import com.example.HospitalJapa.DTO.AvailableRoomDTO;
-import com.example.HospitalJapa.DTO.BedResponseDTO;
-import com.example.HospitalJapa.DTO.RoomAllDTO;
-import com.example.HospitalJapa.DTO.SpecialtyStatusDTO;
+import com.example.HospitalJapa.DTO.*;
 import com.example.HospitalJapa.Model.Bed;
 import com.example.HospitalJapa.Model.Room;
 import com.example.HospitalJapa.Model.Ward;
@@ -24,9 +21,12 @@ public class RoomService {
     @Autowired private WardRepository wardRepository;
     @Autowired private BedService bedService;
 
+
+
     public List<Room> getRoomsByWardId(Long wardId) {
         return roomRepository.findByWardId(wardId);
     }
+
 
     public Room getRoomById(Long id) {
         return roomRepository.findById(id)
@@ -127,36 +127,26 @@ public class RoomService {
     }
 
 
-    public List<RoomAllDTO> listarTodos() {
-        return roomRepository.findAll().stream()
-                .map(this::convertToDTO)
+    public List<RoomStatusDTO> getRoomStatusStats() {
+        List<Room> allRooms = roomRepository.findAll();
+
+        return allRooms.stream()
+                .collect(Collectors.groupingBy(r -> r.getWard().getSpecialty().toString()))
+                .entrySet().stream()
+                .map(entry -> {
+                    String specialty = entry.getKey();
+                    List<Room> roomsBySpecialty = entry.getValue();
+
+                    long total = roomsBySpecialty.size();
+                    long occupied = roomsBySpecialty.stream()
+                            .filter(room -> room.getBeds().stream()
+                                    .anyMatch(bed -> "OCCUPIED".equals(bed.getStatus())))
+                            .count();
+
+                    long free = total - occupied;
+                    return new RoomStatusDTO(specialty, total, free, occupied);
+                })
                 .toList();
-    }
-
-
-    private RoomAllDTO convertToDTO(Room r) {
-        var ward = r.getWard();
-        var hospital = (ward != null) ? ward.getHospital() : null;
-
-        List<BedResponseDTO> bedDTOs = r.getBeds().stream()
-                .map(b -> new BedResponseDTO(
-                        b.getId(),
-                        b.getRoom().getWard().getHospital().getId(),
-                        b.getStatus(),
-                        b.getBedNumber(),
-                       b.getRoom().getWard().getSpecialty().toString()
-                ))
-                .toList();
-
-        return new RoomAllDTO(
-                r.getId(),
-                r.getRoomCode(),
-                r.getStatus(),
-                ward != null ? ward.getSpecialty().toString() : "N/A",
-                hospital != null ? hospital.getId() : null,
-                hospital != null ? hospital.getName() : "N/A",
-                bedDTOs
-        );
     }
 
 

@@ -3,7 +3,8 @@ package com.example.HospitalJapa.DTO;
 import com.example.HospitalJapa.Model.Especialidade;
 
 public record RoomStatusDTO(
-        Especialidade specialty,
-        String status,
-        Long count
+        String specialty,
+        long totalRooms,
+        long freeRooms,
+        long occupiedRooms
 ) {}

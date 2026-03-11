@@ -20,6 +20,7 @@ public class BedService {
     private BedRepository bedRepository;
 
 
+
     public Bed getBedById(Long id) {
         return bedRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Leito não encontrado com id: " + id));

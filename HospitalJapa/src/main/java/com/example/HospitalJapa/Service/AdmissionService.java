@@ -68,6 +68,7 @@ public class AdmissionService {
         admissionLogRepository.save(log);
     }
 
+
     @Transactional
     public void dischargePatient(Long bedId) {
         Bed bed = bedRepository.findById(bedId)
@@ -96,6 +97,7 @@ public class AdmissionService {
         log.setEventType(EventType.DISCHARGE);
         admissionLogRepository.save(log);
     }
+
 
     public List<AdmissionLogDTO> listarTodos() {
         return admissionLogRepository.findAll().stream()
