@@ -12,7 +12,6 @@ import java.util.List;
 public interface BedRepository extends JpaRepository<Bed, Long> {
     List<Bed> findByRoomId(Long roomId);
 
-    //psql, n eh a mesma coisa do sql
     @Query("SELECT b FROM Bed b WHERE b.status = 'UNOCCUPIED' AND b.room.ward.specialty = :specialty")
     List<Bed> findAvailableBedsBySpecialty(@Param("specialty") Especialidade specialty);
 

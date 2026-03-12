@@ -4,7 +4,6 @@ import com.example.HospitalJapa.DTO.*;
 import com.example.HospitalJapa.Model.*;
 import com.example.HospitalJapa.Repository.AdmissionLogRepository;
 import com.example.HospitalJapa.Repository.BedRepository;
-import com.example.HospitalJapa.Repository.PatientRepository;
 import com.example.HospitalJapa.Repository.RoomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -81,7 +80,6 @@ public class ReportsService {
                 ))
                 .toList();
     }
-
 
 
     public List<RoomStatusDTO> getRoomStatusStats() {

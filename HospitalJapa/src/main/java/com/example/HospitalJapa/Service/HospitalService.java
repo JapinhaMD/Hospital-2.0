@@ -41,7 +41,6 @@ public class HospitalService {
             wardService.createWard(hospital, dto.wards());
         }
 
-
         Hospital salvo = hospitalRepository.saveAndFlush(hospital);
 
         return convertToResponseDTO(salvo);
@@ -85,4 +84,6 @@ public class HospitalService {
                 hospital.getId(), hospital.getName(), hospital.getPhone(), hospital.getCnpj(), wardDTOs
         );
     }
+
+
 }

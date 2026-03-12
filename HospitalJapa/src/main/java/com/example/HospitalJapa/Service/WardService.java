@@ -4,6 +4,7 @@ import com.example.HospitalJapa.DTO.HospitalDTO;
 import com.example.HospitalJapa.DTO.WardDTO;
 import com.example.HospitalJapa.Model.Hospital;
 import com.example.HospitalJapa.Model.Ward;
+import com.example.HospitalJapa.Repository.HospitalRepository;
 import com.example.HospitalJapa.Repository.WardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,7 +18,7 @@ public class WardService {
 
     @Autowired private WardRepository wardRepository;
     @Autowired private RoomService roomService;
-
+    @Autowired private HospitalRepository hospitalRepository;
 
 
     public Ward getWardById(Long id) {
@@ -39,7 +40,16 @@ public class WardService {
 
     @Transactional
     public void createWard(Hospital hospital, List<HospitalDTO.WardRequestDTO> wardDtos) {
+
         for (HospitalDTO.WardRequestDTO wardDto : wardDtos) {
+
+            boolean specialtyAlreadyExist = hospital.getWards().stream()
+                    .anyMatch(w -> w.getSpecialty().equals(wardDto.specialty()));
+
+            if (specialtyAlreadyExist) {
+                throw new RuntimeException("Regra de Negócio: O hospital já possui uma ala com a especialidade " + wardDto.specialty());
+            }
+
             Ward ward = new Ward();
             ward.setSpecialty(wardDto.specialty());
             ward.setHospital(hospital);
@@ -74,5 +84,14 @@ public class WardService {
         dto.setSpecialty(String.valueOf(ward.getSpecialty()));
         dto.setHospitalId(ward.getHospital() != null ? ward.getHospital().getId() : null);
         return dto;
+    }
+
+
+    @Transactional
+    public void addWardsToExistingHospital(Long hospitalId, List<HospitalDTO.WardRequestDTO> wardDtos) {
+        Hospital hospital = hospitalRepository.findById(hospitalId)
+                .orElseThrow(() -> new RuntimeException("Hospital não encontrado com o ID: " + hospitalId));
+        createWard(hospital, wardDtos);
+        hospitalRepository.save(hospital);
     }
 }
