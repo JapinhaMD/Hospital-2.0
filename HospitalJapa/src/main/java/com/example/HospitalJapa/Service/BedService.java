@@ -1,15 +1,12 @@
 package com.example.HospitalJapa.Service;
 
 import com.example.HospitalJapa.DTO.BedDTO;
-import com.example.HospitalJapa.DTO.BedResponseDTO;
 import com.example.HospitalJapa.Model.Bed;
-import com.example.HospitalJapa.Model.Especialidade;
 import com.example.HospitalJapa.Model.Room;
 import com.example.HospitalJapa.Repository.BedRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.stream.Collectors;
 

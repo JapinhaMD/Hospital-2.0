@@ -17,6 +17,7 @@ public class RoomController {
     @Autowired private RoomService roomService;
 
 
+
     @GetMapping("/{id}")
     public ResponseEntity<Room> findById(@PathVariable Long id) {
         return ResponseEntity.ok(roomService.getRoomById(id));
@@ -45,8 +46,6 @@ public class RoomController {
         roomService.deleteRoom(id);
         return ResponseEntity.noContent().build();
     }
-
-
 
 
 }

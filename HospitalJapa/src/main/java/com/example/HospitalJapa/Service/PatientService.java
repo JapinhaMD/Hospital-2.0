@@ -1,26 +1,21 @@
 package com.example.HospitalJapa.Service;
 
 import com.example.HospitalJapa.DTO.PatientDTO;
-import com.example.HospitalJapa.DTO.PatientLocationDTO;
-import com.example.HospitalJapa.Model.AdmissionLog;
 import com.example.HospitalJapa.Model.Patient;
 import com.example.HospitalJapa.Repository.AdmissionLogRepository;
 import com.example.HospitalJapa.Repository.PatientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.stream.Collectors;
+
 
 @Service
 public class PatientService {
 
     @Autowired
     private PatientRepository patientRepository;
-
-    @Autowired
-    private AdmissionLogRepository admissionLogRepository;
 
 
 

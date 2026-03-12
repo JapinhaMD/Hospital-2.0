@@ -2,9 +2,6 @@ package com.example.HospitalJapa.Controller;
 
 import com.example.HospitalJapa.DTO.*;
 import com.example.HospitalJapa.Model.Especialidade;
-import com.example.HospitalJapa.Repository.AdmissionLogRepository;
-import com.example.HospitalJapa.Repository.BedRepository;
-import com.example.HospitalJapa.Repository.PatientRepository;
 import com.example.HospitalJapa.Service.ReportsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -34,10 +31,11 @@ public class ReportsController {
     }
 
 
-    //Criar requisição que retorne pelo id do paciente que está internado:
-    @GetMapping("/patient/{patientId}/details")
-    public ResponseEntity<PatientHospitalDetailsDTO> getAdmissionDetails(@PathVariable Long patientId) {
-        return ResponseEntity.ok(reportsService.getInfosPatient(patientId));
+    //Criar requisição que retorne as informações necessárias pelo id do paciente que está internado
+    @GetMapping("/location/{patientId}")
+    public ResponseEntity<PatientLocationDTO> getPatientLocation(@PathVariable Long patientId) {
+        PatientLocationDTO location = reportsService.localizePatient(patientId);
+        return ResponseEntity.ok(location);
     }
 
 
@@ -55,8 +53,7 @@ public class ReportsController {
     }
 
 
-
-    //Criar requisição paginada que retorne o histórico de internamento de um paciente contendo
+    //Criar requisição paginada que retorne o histórico de internamento de um paciente
     @GetMapping("/patient/{patientId}/history")
     public ResponseEntity<Page<PatientHistoryDTO>> getHistory(
             @PathVariable Long patientId,
@@ -66,14 +63,21 @@ public class ReportsController {
     }
 
 
+    //Criar requisição que retorne lista de quartos com algum leito disponível
+    @GetMapping("/available")
+    public ResponseEntity<List<AvailableRoomDTO>> getAvailableRooms() {
+        return ResponseEntity.ok(reportsService.getAvailableRooms());
+    }
 
+
+    //Criar requisição que retorne lista de todos os pacientes internados no momento
     @GetMapping("/active")
     public ResponseEntity<Map<String, List<ActiveAdmissionDTO>>> getActiveBySpecialty() {
         return ResponseEntity.ok(reportsService.getAllCharged());
     }
 
 
-
+    //Criar requisição que retorne histórico de internação de um leito específico
     @GetMapping("/history/{bedId}")
     public ResponseEntity<List<BedHistoryDTO>> getBedHistory(@PathVariable Long bedId) {
         List<BedHistoryDTO> history = reportsService.getBedHistory(bedId);
@@ -81,18 +85,4 @@ public class ReportsController {
     }
 
 
-
-
-    @GetMapping("/available")
-    public ResponseEntity<List<AvailableRoomDTO>> getAvailableRooms() {
-        return ResponseEntity.ok(reportsService.getAvailableRooms());
-    }
-
-
-    //Criar requisição que retorne pelo id do paciente que está internado
-    @GetMapping("/location/{patientId}")
-    public ResponseEntity<PatientLocationDTO> getPatientLocation(@PathVariable Long patientId) {
-        PatientLocationDTO location = reportsService.localizePatient(patientId);
-        return ResponseEntity.ok(location);
-    }
 }

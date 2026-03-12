@@ -18,6 +18,7 @@ public class WardController {
     private WardService wardService;
 
 
+
     @GetMapping("/hospital/{hospitalId}")
     public ResponseEntity<List<Ward>> listByHospital(@PathVariable Long hospitalId) {
         return ResponseEntity.ok(wardService.getWardsByHospitalId(hospitalId));

@@ -1,10 +1,7 @@
 package com.example.HospitalJapa.Service;
 
 import com.example.HospitalJapa.DTO.*;
-import com.example.HospitalJapa.Model.AdmissionLog;
-import com.example.HospitalJapa.Model.Bed;
-import com.example.HospitalJapa.Model.Especialidade;
-import com.example.HospitalJapa.Model.Room;
+import com.example.HospitalJapa.Model.*;
 import com.example.HospitalJapa.Repository.AdmissionLogRepository;
 import com.example.HospitalJapa.Repository.BedRepository;
 import com.example.HospitalJapa.Repository.PatientRepository;
@@ -13,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -25,26 +21,11 @@ public class ReportsService {
 
     @Autowired private AdmissionLogRepository admissionLogRepository;
     @Autowired private BedRepository bedRepository;
-    @Autowired private PatientRepository patientRepository;
     @Autowired private RoomRepository roomRepository;
 
 
-    //Criar requisição que retorne pelo id do paciente que está internado
-    public PatientHospitalDetailsDTO getInfosPatient(Long patientId) {
-        AdmissionLog log = admissionLogRepository.findInfosPatientId(patientId)
-                .orElseThrow(() -> new RuntimeException("Paciente não encontrado ou não possui internação ativa."));
 
-        return new PatientHospitalDetailsDTO(
-                log.getBed().getRoom().getWard().getHospital().getName(),
-                log.getBed().getRoom().getWard().getSpecialty().toString(),
-                log.getBed().getRoom().getRoomCode(),
-                log.getPatient().getName(),
-                log.getDateTime()
-        );
-    }
-
-
-    //Criar requisição paginada que retorne o histórico de internamento de um paciente contendo
+    //Criar requisição paginada que retorne o histórico de internamento de um paciente
     public Page<PatientHistoryDTO> getHistoryPatient(Long patientId, Pageable pageable) {
         Page<AdmissionLog> logs = admissionLogRepository.findHistoryByPatientId(patientId, pageable);
 
@@ -138,10 +119,15 @@ public class ReportsService {
     }
 
 
+    //FIX BUG DE RETORNAR MAIS DE UM LOG Obs: usado as funções do JPA e nao query
     public PatientLocationDTO localizePatient(Long patientId) {
-        AdmissionLog log = admissionLogRepository.findActiveAdmissionByPatientId(patientId)
-                .orElseThrow(() -> new RuntimeException("Paciente não localizado ou já recebeu alta."));
+        AdmissionLog log = admissionLogRepository
+                .findFirstByPatientIdAndEventTypeOrderByDateTimeDesc(patientId, EventType.valueOf("ADMISSION"))
+                .orElseThrow(() -> new RuntimeException("Paciente nunca foi internado."));
 
+        if (!log.getPatient().getIsHospitalized()) {
+            throw new RuntimeException("O paciente já recebeu alta.");
+        }
         return new PatientLocationDTO(
                 log.getPatient().getId(),
                 log.getPatient().getName(),

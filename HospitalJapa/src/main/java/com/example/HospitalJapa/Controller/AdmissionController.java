@@ -2,27 +2,19 @@ package com.example.HospitalJapa.Controller;
 
 import com.example.HospitalJapa.DTO.*;
 import com.example.HospitalJapa.Service.AdmissionService;
-import com.example.HospitalJapa.Repository.AdmissionLogRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
-import java.util.Map;
 
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/admissions")
 public class AdmissionController {
 
-    @Autowired
-    private AdmissionService admissionService;
+    @Autowired private AdmissionService admissionService;
 
 
 

@@ -1,8 +1,6 @@
 package com.example.HospitalJapa.Controller;
 
 import com.example.HospitalJapa.DTO.BedDTO;
-import com.example.HospitalJapa.DTO.BedResponseDTO;
-import com.example.HospitalJapa.Model.Especialidade;
 import com.example.HospitalJapa.Service.BedService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
